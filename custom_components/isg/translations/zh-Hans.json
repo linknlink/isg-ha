@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LinknLink iSG",
+        "description": "连接到本机的 isgandroidcontrol 服务。如果 Home Assistant 就跑在这台 iSG 上，保持默认地址即可。",
+        "data": {
+          "host": "主机",
+          "port": "端口"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "无法连接 isgandroidcontrol。请确认该服务已安装并正在运行。",
+      "unknown": "发生未知错误"
+    },
+    "abort": {
+      "already_configured": "这台 iSG 已经配置过了"
+    }
+  },
+  "entity": {
+    "switch": {
+      "screen": {
+        "name": "屏幕"
+      }
+    },
+    "number": {
+      "volume": {
+        "name": "音量"
+      },
+      "brightness": {
+        "name": "亮度"
+      }
+    }
+  }
+}

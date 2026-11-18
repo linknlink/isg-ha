@@ -1,0 +1,11 @@
+{
+  "domain": "isg",
+  "name": "LinknLink iSG",
+  "codeowners": ["@linknlink"],
+  "config_flow": true,
+  "documentation": "https://github.com/linknlink/isg-ha",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/linknlink/isg-ha/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

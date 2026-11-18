@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LinknLink iSG",
+        "description": "Connect to isgandroidcontrol on this iSG. Keep the defaults if Home Assistant is running on the same device.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to isgandroidcontrol. Make sure the service is installed and running.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This iSG is already configured"
+    }
+  },
+  "entity": {
+    "switch": {
+      "screen": {
+        "name": "Screen"
+      }
+    },
+    "number": {
+      "volume": {
+        "name": "Volume"
+      },
+      "brightness": {
+        "name": "Brightness"
+      }
+    }
+  }
+}
