@@ -7,11 +7,11 @@ Home Assistant custom integration for LinknLink iSG. It controls the screen and 
 ## Requirements
 
 1. Home Assistant on the iSG (Termux / proot), with [HACS](https://hacs.xyz/) installed.
-2. The `isgandroidcontrol` service installed and running on the same device, managed by isgservicemanager. It listens on `http://127.0.0.1:18951`.
+2. The `isgandroidcontrol` service on the same device. It is a default-installed infrastructure service managed by isgservicemanager, and listens on `http://127.0.0.1:18951`.
 
 ## Install
 
-1. In iSG (isgmanager / 版本管理), install or upgrade the **iSG Android Control** (`isgandroidcontrol`) extension and start it if it is not already running.
+1. On the iSG, confirm **iSG Android Control** (`isgandroidcontrol`) is installed and running. It is a default-installed infrastructure service (not an extension-store addon) and can be checked in 版本管理. Start or upgrade it there if needed.
 2. In Home Assistant, open HACS → Integrations → Custom repositories, add:
 
    `https://github.com/linknlink/isg-ha`
