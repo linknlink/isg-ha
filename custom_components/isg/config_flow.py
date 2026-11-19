@@ -18,14 +18,26 @@ from .const import CONF_HOST, CONF_PORT, DEFAULT_HOST, DEFAULT_PORT, DOMAIN
 _LOGGER = logging.getLogger(__name__)
 _TIMEOUT = ClientTimeout(total=8)
 
+# Optional (not Required) so Home Assistant advertises no required fields.
+# isgservicemanager CreateEntry only submits {} when the schema has none.
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_HOST, default=DEFAULT_HOST): str,
-        vol.Required(CONF_PORT, default=DEFAULT_PORT): vol.All(
+        vol.Optional(CONF_HOST, default=DEFAULT_HOST): str,
+        vol.Optional(CONF_PORT, default=DEFAULT_PORT): vol.All(
             vol.Coerce(int), vol.Range(min=1, max=65535)
         ),
     }
 )
+
+
+def normalized_user_input(user_input: dict[str, Any] | None) -> dict[str, Any]:
+    """Apply schema defaults and normalize host/port for an empty or partial submit."""
+    data = dict(STEP_USER_DATA_SCHEMA(user_input or {}))
+    host = str(data.get(CONF_HOST, DEFAULT_HOST)).strip() or DEFAULT_HOST
+    port = int(data.get(CONF_PORT, DEFAULT_PORT))
+    data[CONF_HOST] = host
+    data[CONF_PORT] = port
+    return data
 
 
 async def _validate(hass: HomeAssistant, host: str, port: int) -> None:
@@ -56,21 +68,24 @@ class ISGConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            host = user_input[CONF_HOST].strip()
-            port = int(user_input[CONF_PORT])
-            user_input[CONF_HOST] = host
-            user_input[CONF_PORT] = port
-            await self.async_set_unique_id(f"{host}:{port}")
-            self._abort_if_unique_id_configured()
             try:
-                await _validate(self.hass, host, port)
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
-            except Exception:  # noqa: BLE001
-                _LOGGER.exception("Unexpected exception")
+                user_input = normalized_user_input(user_input)
+            except (vol.Invalid, ValueError, TypeError):
                 errors["base"] = "unknown"
             else:
-                return self.async_create_entry(title="LinknLink iSG", data=user_input)
+                host = user_input[CONF_HOST]
+                port = user_input[CONF_PORT]
+                await self.async_set_unique_id(f"{host}:{port}")
+                self._abort_if_unique_id_configured()
+                try:
+                    await _validate(self.hass, host, port)
+                except CannotConnect:
+                    errors["base"] = "cannot_connect"
+                except Exception:  # noqa: BLE001
+                    _LOGGER.exception("Unexpected exception")
+                    errors["base"] = "unknown"
+                else:
+                    return self.async_create_entry(title="LinknLink iSG", data=user_input)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
