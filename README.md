@@ -1,5 +1,7 @@
 # LinknLink iSG
 
+<img src="custom_components/isg/brand/icon.png" width="96" alt="LinknLink iSG icon">
+
 Home Assistant custom integration for LinknLink iSG. It controls the screen and media volume of the iSG that is running this Home Assistant instance, by calling the local `isgandroidcontrol` service on `127.0.0.1`. It does not use ADB.
 
 ## Requirements
